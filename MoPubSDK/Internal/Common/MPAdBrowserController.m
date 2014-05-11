@@ -14,7 +14,6 @@
 
 @property (nonatomic, retain) UIActionSheet *actionSheet;
 @property (nonatomic, retain) NSString *HTMLString;
-@property (nonatomic, assign) int webViewLoadCount;
 
 - (void)dismissActionSheet;
 
@@ -35,7 +34,6 @@
 @synthesize actionSheet = _actionSheet;
 @synthesize delegate = _delegate;
 @synthesize URL = _URL;
-@synthesize webViewLoadCount = _webViewLoadCount;
 @synthesize HTMLString = _HTMLString;
 
 #pragma mark -
@@ -60,8 +58,6 @@
         self.spinner = [[[UIActivityIndicatorView alloc] initWithFrame:CGRectZero] autorelease];
         [self.spinner sizeToFit];
         self.spinner.hidesWhenStopped = YES;
-
-        self.webViewLoadCount = 0;
     }
     return self;
 }
@@ -219,14 +215,11 @@
     self.refreshButton.enabled = YES;
     self.safariButton.enabled = YES;
     [self.spinner startAnimating];
-
-    self.webViewLoadCount++;
 }
 
 - (void)webViewDidFinishLoad:(UIWebView *)webView
 {
-    self.webViewLoadCount--;
-    if (self.webViewLoadCount > 0) return;
+    if (self.webView.loading) return;
 
     self.refreshButton.enabled = YES;
     self.safariButton.enabled = YES;
@@ -237,8 +230,6 @@
 
 - (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error
 {
-    self.webViewLoadCount--;
-
     self.refreshButton.enabled = YES;
     self.safariButton.enabled = YES;
     self.backButton.enabled = self.webView.canGoBack;
