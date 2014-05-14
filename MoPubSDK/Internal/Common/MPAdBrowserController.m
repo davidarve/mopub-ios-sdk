@@ -199,7 +199,8 @@
     if (buttonIndex == 0)
     {
         // Open in Safari.
-        [[UIApplication sharedApplication] openURL:self.URL];
+        NSURL *currentURL = [self.webView.request URL];
+        [[UIApplication sharedApplication] openURL:currentURL];
     }
 }
 
@@ -209,8 +210,6 @@
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request
  navigationType:(UIWebViewNavigationType)navigationType
 {
-    MPLogDebug(@"Ad browser (%p) starting to load URL: %@", self, request.URL);
-    self.URL = request.URL;
     return YES;
 }
 
